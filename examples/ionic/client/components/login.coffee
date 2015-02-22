@@ -1,5 +1,5 @@
 {div, form, input} = Reactor.DOM
-{Ionic, Header, Content, Padding, Button, List, Item} = Reactor.components
+{Ionic, Header, Error, Content, Padding, Button, List, Item} = Reactor.components
 
 
 Reactor.component
@@ -9,24 +9,30 @@ Reactor.component
   getInitialState: ->
     username: ''
     password: ''
+    error: ''
 
   submitForm: (e) ->
     e.preventDefault()
-    console.log @state.username, @state.password
+    Meteor.loginWithPassword @state.username, @state.password, (err) =>
+      if err 
+        @setState {error: err.reason}
+      else
+        Reactor.go('leaderboard')
 
   render: ->
     (Ionic {}, [
       (Header  {title: "Login"})
-      (Content {}, [
+      (Content {header: true}, [
         (form {onSubmit: @submitForm}, [
           (List {}, [
-            (Item {}, [
+            (Item {input: true}, [
               (input {type:'text', placeholder:'username', valueLink: @linkState('username')})
             ])
-            (Item {}, [
+            (Item {input: true}, [
               (input {type:'password', placeholder:'password', valueLink: @linkState('password')})
             ])
           ])
+          do => if @state.error then (Error @state.error)
           (Padding [
             (Button {type:'block', color:'dark'}, 'login')
             (Button {type:'block', color:'balanced', div:true, onClick: -> Reactor.go('signup')}, 'signup')
@@ -45,27 +51,37 @@ Reactor.component
     username: ''
     password: ''
     verify: ''
+    error: ''
 
   submitForm: (e) ->
     e.preventDefault()
-    console.log @state.username, @state.password
+    if @state.password isnt @state.verify
+      @setState {error: 'Passwords don\'t match'}
+      return
+      
+    Accounts.createUser {username: @state.username, password: @state.password, profile:{score:0}}, (err) =>
+      if err 
+        @setState {error: err.reason}
+      else
+        Reactor.go('leaderboard')
 
   render: ->
     (Ionic {}, [
       (Header  {title: "Signup"})
-      (Content {}, [
+      (Content {header: true}, [
         (form {onSubmit: @submitForm}, [
           (List {}, [
-            (Item {}, [
+            (Item {input: true}, [
               (input {type:'text', placeholder:'username', valueLink: @linkState('username')})
             ])
-            (Item {}, [
+            (Item {input: true}, [
               (input {type:'password', placeholder:'password', valueLink: @linkState('password')})
             ])
-            (Item {}, [
+            (Item {input: true}, [
               (input {type:'password', placeholder:'verify', valueLink: @linkState('verify')})
             ])
           ])
+          do => if @state.error then (Error @state.error)
           (Padding [
             (Button {type:'block', color:'balanced'}, 'signup')
             (Button {type:'block', color:'dark', div:true, onClick: -> 

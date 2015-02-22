@@ -14,14 +14,40 @@ Reactor.component
 
   getDefaultProps: ->
     title: ''
+    color: 'positive'    
 
   render: ->
-    classes = React.addons.classSet
+
+    classSet = 
       'bar': true
       'bar-header': true
-      'bar-positive': true
+
+    if @props.color then classSet["bar-#{@props.color}"] = true
+
+    classes = React.addons.classSet(classSet)
 
     (div {className:classes}, [
+      (h1 {className:"title" }, @props.title )
+    ])
+
+
+Reactor.component
+  name: 'Footer'
+
+  getDefaultProps: ->
+    title: ''
+    color: 'calm'
+
+  render: ->
+    classSet = 
+      'bar': true
+      'bar-footer': true
+
+    if @props.color then classSet["bar-#{@props.color}"] = true
+
+    classes = React.addons.classSet(classSet)
+
+    (div {className:classes, onClick:@props.onClick}, [
       (h1 {className:"title" }, @props.title )
     ])
 
@@ -29,13 +55,15 @@ Reactor.component
   name: 'Content'
 
   getDefaultProps: ->
-    header: true
+    header: false
+    footer: false
 
   render: ->
 
     classes = React.addons.classSet
       'content': true
       'has-header': @props.header
+      'has-footer': @props.header
 
     (div {className:classes}, [
       (@props.children)
@@ -70,14 +98,19 @@ Reactor.component
 
   getDefaultProps: ->
     input: false
+    color: 'light'
 
   render: ->
 
-    classes = React.addons.classSet
+    classSet = 
       'item': true
-      'item-input': true
+      'item-input': @props.input
 
-    (label {className:classes}, [
+    if @props.color then classSet["item-#{@props.color}"] = true
+
+    classes = React.addons.classSet(classSet)      
+
+    (label {className:classes, onClick: @props.onClick}, [
       (@props.children)
     ])
 
@@ -104,3 +137,14 @@ Reactor.component
       (button {className:classes, onClick:@props.onClick}, [
         (@props.children)
       ])
+
+Reactor.component
+  name: 'Error'
+
+  render: ->
+    style = 
+      'text-align': 'center'
+
+    (div {style:style}, [
+      (span {className: 'assertive'}, @props.children)
+    ])

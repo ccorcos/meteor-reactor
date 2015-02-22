@@ -14,4 +14,5 @@ Meteor.startup ->
       Accounts.createUser
         username: name
         password: '123456'
-        score: Math.floor(Random.fraction() * 10) * 5
+        profile:
+          score: Math.floor(Random.fraction() * 10) * 5
