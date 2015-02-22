@@ -1,7 +1,6 @@
 Meteor.startup ->
-  
-  if Players.find().count() == 0
-
+  if Meteor.users.find().count() is 0
+    
     names = [
       'Ada Lovelace'
       'Grace Hopper'
@@ -12,6 +11,7 @@ Meteor.startup ->
     ]
 
     for name in names
-      Players.insert
-        name: name
+      Accounts.createUser
+        username: name
+        password: '123456'
         score: Math.floor(Random.fraction() * 10) * 5

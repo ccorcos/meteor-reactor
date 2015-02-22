@@ -1,19 +1,16 @@
 {input, a} = Reactor.DOM
 
 
-Meteor.startup ->
-  Reactor.render Reactor.components.Signup()
+Reactor.route
+  name: 'login'
+  
+Reactor.route
+  name: 'signup'
 
-# Router.route 'login', ->
-#   RenderDom Login()
-#   # @next()
-
-# Router.route 'signup', ->
-#   RenderDom Signup()
-#   # @next()
-
-# Router.route 'home', 
-#   path: '/'
-#   action: ->
-#       RenderDom (a {href: Router.path('login')}, 'login')
-#       # @next()
+Reactor.route
+  name: 'home'
+  path: '/'
+  action: ->
+    url = Reactor.path('login')
+    c = (a {href: url}, 'login')
+    Reactor.render(c)

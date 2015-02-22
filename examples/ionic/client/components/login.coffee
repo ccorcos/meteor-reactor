@@ -29,7 +29,7 @@ Reactor.component
           ])
           (Padding [
             (Button {type:'block', color:'dark'}, 'login')
-            (Button {type:'block', color:'balanced', div:true, onClick: -> Router.go('signup')}, 'signup')
+            (Button {type:'block', color:'balanced', div:true, onClick: -> Reactor.go('signup')}, 'signup')
           ])
         ])
       ])
@@ -69,8 +69,7 @@ Reactor.component
           (Padding [
             (Button {type:'block', color:'balanced'}, 'signup')
             (Button {type:'block', color:'dark', div:true, onClick: -> 
-              console.log "here"
-              Router.go('login')}, 'login')
+              Reactor.go('login')}, 'login')
           ])
         ])
       ])

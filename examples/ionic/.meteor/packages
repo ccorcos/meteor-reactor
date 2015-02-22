@@ -12,3 +12,4 @@ reactive-var
 ccorcos:reactor
 fastclick
 velocityjs:velocityjs
+accounts-password

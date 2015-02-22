@@ -10,10 +10,12 @@ Package.onUse(function(api) {
   api.use([
     'coffeescript',
     'underscore',
+    'iron:router',
   ], 'client');
 
   api.addFiles([
-    'react.js',
-    'reactor.coffee',
+    'lib/react.js',
+    'lib/reactor.coffee',
+    'lib/routing.coffee'
   ], 'client');
 });

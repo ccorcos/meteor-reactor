@@ -1,4 +1,5 @@
-Reactor = {}
+@Reactor = {}
+Reactor = @Reactor
 
 # Coffee Syntax Jazz
 build_tag = (tag) ->
@@ -83,23 +84,4 @@ Reactor.component = (obj) ->
 
   return func
 
-
-@Reactor = Reactor
-
-# Reactor
-
-# Reactor.route
-#   name: 'login'
-#   #path: '/login'
-#   #component: 'login' or 'Login'
-#   before: ->
-#     @params, etc.
-#     whatever you want,
-#     if something then @redirect elsewhere
-#   action: ->
-#     if you have an action, youre responsible for rendering!
-#     ReactRender Login, {userId: @params._id}
-#   after: ->
-#     @params, etc.
-#     maybe log what happened or something
 
