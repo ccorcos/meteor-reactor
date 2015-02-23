@@ -51,13 +51,13 @@ MeteorStateMixin =
 
 MeteorSubscriptionMixin =
   getInitialState: ->
-    loading: not @sub?.ready?()
+    loading: do -> if @sub?.ready then not @sub.ready() else false
 
   componentWillMount: ->
     unless @computations
       @computations = []
 
-    @sub = @getMeteorSubscriptions()
+    @sub = @subscribe()
     c = Tracker.autorun =>
       @setState {loading: not @sub?.ready?()}
 
@@ -66,7 +66,11 @@ MeteorSubscriptionMixin =
   componentWillUnmount: ->
     @sub?.stop?()
 
-
+Reactor.subs = new SubsManager
+  cacheLimit: 10
+  expireIn: 5
+  
+Reactor.subscribe = Reactor.subs.subscribe.bind(Reactor.subs)
 
 Reactor.mixins =
   PureRender: React.addons.PureRenderMixin

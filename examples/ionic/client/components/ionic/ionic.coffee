@@ -34,9 +34,6 @@ Reactor.component
     (div {className:classes}, @props.children)
 
 
-
-
-
 Reactor.component
   name: 'Footer'
 
@@ -54,6 +51,7 @@ Reactor.component
 
     (div {className:classes, onClick:@props.onClick}, @props.children)
 
+
 Reactor.component
   name: 'Content'
 
@@ -65,6 +63,7 @@ Reactor.component
 
     classes = React.addons.classSet
       'content': true
+      'overflow-scroll': true
       'has-header': @props.header
       'has-footer': @props.header
 
@@ -73,7 +72,6 @@ Reactor.component
     ])
 
 
-# This is really just a partial application on div with styles.
 Reactor.component
   name: 'Padding'
 
@@ -87,11 +85,7 @@ Reactor.component
   name: 'List'
 
   render: ->
-
-    classes = React.addons.classSet
-      'list': true
-
-    (div {className:classes}, [
+    (div {className:'list'}, [
       (@props.children)
     ])
 
@@ -128,14 +122,14 @@ Reactor.component
     div: false
 
   render: ->
-    classes = {'button': true}
-    if @props.type then classes["button-#{@props.type}"] = true
-    if @props.color then classes["button-#{@props.color}"] = true
+    classSet = {'button': true}
+    if @props.type then classSet["button-#{@props.type}"] = true
+    if @props.color then classSet["button-#{@props.color}"] = true
     if @props.type is 'icon'
-      classes.icon = true
-      classes["ion-#{@props.icon}"] = true
+      classSet.icon = true
+      classSet["ion-#{@props.icon}"] = true
 
-    classes = React.addons.classSet(classes)
+    classes = React.addons.classSet(classSet)
 
     if @props.div
       (div {className:classes, onClick:@props.onClick}, [

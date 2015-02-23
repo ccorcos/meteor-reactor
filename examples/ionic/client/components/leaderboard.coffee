@@ -16,9 +16,6 @@ Player = Reactor.component
   selectPlayer: ->
     Session.set('selectedPlayerId', @props.player._id)
 
-  subscribe: ->
-    Meteor.subscribe('players')
-
   render: ->
 
     options = 
@@ -40,11 +37,14 @@ Reactor.component
     players: -> Meteor.users.find({}, { sort: { 'profile.score': -1, username: 1 } }).fetch()
     selectedPlayer: -> Meteor.users.findOne(Session.get('selectedPlayerId'))
   
+  subscribe: ->
+    Reactor.subscribe('players')
+
   incPlayerScore: ->
     Meteor.call('incPlayer', @state.selectedPlayer._id)
 
-  render: ->
 
+  render: ->
     players = @state.players.map (player) =>
       (Player {player: player, selected: (@state.selectedPlayer?._id is player._id)})
 
@@ -63,7 +63,11 @@ Reactor.component
         Button {type: 'icon', icon: 'log-out', color: 'primary', onClick: -> Meteor.logout()}
       ])
       (Content {header:true, footer:true}, [
-        (List {}, players)
+        do =>
+          if @state.loading
+            (div 'loading...')
+          else
+            (List {}, players)
       ])
       footer
     ])
