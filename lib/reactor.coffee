@@ -98,7 +98,9 @@ Reactor.component = (obj) ->
   if 'subscribe' of obj
     unless Reactor.mixins.MeteorSubscriptionMixin in obj.mixins
       obj.mixins.push(Reactor.mixins.MeteorSubscriptionMixin)
-
+    unless Reactor.mixins.MeteorStateMixin in obj.mixins
+      obj.mixins.push(Reactor.mixins.MeteorStateMixin)
+      
   # I dont see a case where we wouldnt want this...
   # I guess all inputs must be controlled...
   unless Reactor.mixins.PureRender in obj.mixins
