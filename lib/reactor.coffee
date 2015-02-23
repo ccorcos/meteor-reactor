@@ -1,4 +1,5 @@
 @Reactor = {}
+
 Reactor = @Reactor
 
 # Coffee Syntax Jazz
@@ -19,7 +20,7 @@ Reactor.render = (component) ->
   React.render(component, document.body)
 
 # Meteor mixin
-MeteorMixin =
+MeteorStateMixin =
   getInitialState: ->
     s = {}
     for name, func of @getMeteorState
@@ -27,7 +28,10 @@ MeteorMixin =
     return s
 
   componentWillMount: ->
-    computations = []
+    unless @computations
+      @computations = []
+
+    computations = @computations
     for name, func of @getMeteorState
       do (name, func) =>
         comp = Tracker.autorun (c)=>
@@ -37,18 +41,37 @@ MeteorMixin =
             s[name] = value
             @setState(s)
         computations.push(comp)
-    @computations = computations
 
   componentWillUnmount: ->
     if @computations
       for computation in @computations
-        computation.stop()
+        computation.stop?()
       @computations = null
+
+
+MeteorSubscriptionMixin =
+  getInitialState: ->
+    loading: not @sub?.ready?()
+
+  componentWillMount: ->
+    unless @computations
+      @computations = []
+
+    @sub = @getMeteorSubscriptions()
+    c = Tracker.autorun =>
+      @setState {loading: not @sub?.ready?()}
+
+    @computations.push c 
+
+  componentWillUnmount: ->
+    @sub?.stop?()
+
 
 
 Reactor.mixins =
   PureRender: React.addons.PureRenderMixin
-  MeteorMixin: MeteorMixin
+  MeteorStateMixin: MeteorStateMixin
+  MeteorSubscriptionMixin: MeteorSubscriptionMixin
 
 # Create a component
 Reactor.components = {}
@@ -65,8 +88,12 @@ Reactor.component = (obj) ->
       obj.mixins = []
 
   if 'getMeteorState' of obj
-    unless Reactor.mixins.MeteorMixin in obj.mixins
-      obj.mixins.push(Reactor.mixins.MeteorMixin)
+    unless Reactor.mixins.MeteorStateMixin in obj.mixins
+      obj.mixins.push(Reactor.mixins.MeteorStateMixin)
+
+  if 'subscribe' of obj
+    unless Reactor.mixins.MeteorSubscriptionMixin in obj.mixins
+      obj.mixins.push(Reactor.mixins.MeteorSubscriptionMixin)
 
   # I dont see a case where we wouldnt want this...
   # I guess all inputs must be controlled...

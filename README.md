@@ -14,9 +14,8 @@ This package also wraps Iron Router to make it work with React.
 
 ## To Do
 
-- routing helper function that renders the appropriate React component
 - leaderboard in ionic with subscribe and subs-manager
-
+- animation!
 
 
 - Meteor mixin with subscribe with subs manager

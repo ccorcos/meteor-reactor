@@ -13,6 +13,8 @@ Package.onUse(function(api) {
     'iron:router',
   ], 'client');
 
+  // api.use('iron:router', 'client', {weak: true});
+
   api.addFiles([
     'lib/react.js',
     'lib/reactor.coffee',
