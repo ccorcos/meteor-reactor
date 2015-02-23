@@ -1,6 +1,6 @@
 # Reactor - React for Meteor
 
-This is an opinionated package for integrating React with Meteor.
+An opinionated package for integrating React with Meteor.
 
 ## Getting Started
 
