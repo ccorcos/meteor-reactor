@@ -10,8 +10,8 @@ Package.onUse(function(api) {
   api.use([
     'coffeescript',
     'underscore',
-    'iron:router',
-    'meteorhacks:subs-manager',
+    'iron:router@1.0.7',
+    'meteorhacks:subs-manager@1.3.0',
   ], 'client');
 
   // api.use('iron:router', 'client', {weak: true});
