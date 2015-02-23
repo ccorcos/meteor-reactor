@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ccorcos:reactor',
   version: '0.12.2',
-  summary: 'React for Meteor.',
+  summary: 'This is an opinionated package for integrating React with Meteor.',
   git: 'https://github.com/ccorcos/meteor-reactor'
 });
 
