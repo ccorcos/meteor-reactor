@@ -1,4 +1,10 @@
-{input, a} = Reactor.DOM
+Reactor.onBeforeAction ->
+    if not Meteor.userId()
+      @redirect 'login'
+    else
+      @next()
+  ,
+    except: ['login', 'signup']#, 'forgot', 'reset']
 
 
 Reactor.route

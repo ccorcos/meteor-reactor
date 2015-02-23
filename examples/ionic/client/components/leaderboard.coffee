@@ -1,5 +1,5 @@
 {div, form, input, span} = Reactor.DOM
-{Ionic, Header, Footer, Content, Padding, Button, List, Item} = Reactor.components
+{Ionic, Header, Title, Footer, Content, Padding, Button, List, Item} = Reactor.components
 
 
 Player = Reactor.component
@@ -15,6 +15,9 @@ Player = Reactor.component
 
   selectPlayer: ->
     Session.set('selectedPlayerId', @props.player._id)
+
+  subscribe: ->
+    Meteor.subscribe('players')
 
   render: ->
 
@@ -45,12 +48,20 @@ Reactor.component
     players = @state.players.map (player) =>
       (Player {player: player, selected: (@state.selectedPlayer?._id is player._id)})
 
-    footer = (Footer {title: "Select a player"})
+    footer = (Footer [
+      Title "Select a player"
+    ])
+
     if @state.selectedPlayer
-      footer = (Footer {title: "Add 5 points", onClick: @incPlayerScore})
+      footer = (Footer {onClick: @incPlayerScore}, [
+        Title 'Add 5 points'
+      ])
 
     (Ionic {}, [
-      (Header  {title: "Leaderboard"})
+      (Header  [
+        Title 'Leaderboard'
+        Button {type: 'icon', icon: 'log-out', color: 'primary', onClick: -> Meteor.logout()}
+      ])
       (Content {header:true, footer:true}, [
         (List {}, players)
       ])

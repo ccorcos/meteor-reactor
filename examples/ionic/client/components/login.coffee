@@ -1,5 +1,5 @@
 {div, form, input} = Reactor.DOM
-{Ionic, Header, Error, Content, Padding, Button, List, Item} = Reactor.components
+{Ionic, Header, Title, Error, Content, Padding, Button, List, Item} = Reactor.components
 
 
 Reactor.component
@@ -21,7 +21,9 @@ Reactor.component
 
   render: ->
     (Ionic {}, [
-      (Header  {title: "Login"})
+      (Header  [
+        (Title 'Login')
+      ])
       (Content {header: true}, [
         (form {onSubmit: @submitForm}, [
           (List {}, [
@@ -67,7 +69,9 @@ Reactor.component
 
   render: ->
     (Ionic {}, [
-      (Header  {title: "Signup"})
+      (Header  [
+        (Title 'Signup')
+      ])
       (Content {header: true}, [
         (form {onSubmit: @submitForm}, [
           (List {}, [

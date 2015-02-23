@@ -16,3 +16,7 @@ Meteor.startup ->
         password: '123456'
         profile:
           score: Math.floor(Random.fraction() * 10) * 5
+
+Meteor.publish 'players', () ->
+  if @userId
+    Meteor.users.find({}, {fields:{username:1, 'profile.score':1}})

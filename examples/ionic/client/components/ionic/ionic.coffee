@@ -10,10 +10,15 @@ Reactor.component
 
 
 Reactor.component
+  name: 'Title' 
+  render: ->
+    (h1 {className:"title" }, @props.children )
+
+
+Reactor.component
   name: 'Header'
 
   getDefaultProps: ->
-    title: ''
     color: 'positive'    
 
   render: ->
@@ -26,16 +31,16 @@ Reactor.component
 
     classes = React.addons.classSet(classSet)
 
-    (div {className:classes}, [
-      (h1 {className:"title" }, @props.title )
-    ])
+    (div {className:classes}, @props.children)
+
+
+
 
 
 Reactor.component
   name: 'Footer'
 
   getDefaultProps: ->
-    title: ''
     color: 'calm'
 
   render: ->
@@ -47,9 +52,7 @@ Reactor.component
 
     classes = React.addons.classSet(classSet)
 
-    (div {className:classes, onClick:@props.onClick}, [
-      (h1 {className:"title" }, @props.title )
-    ])
+    (div {className:classes, onClick:@props.onClick}, @props.children)
 
 Reactor.component
   name: 'Content'
@@ -121,12 +124,17 @@ Reactor.component
   getDefaultProps: ->
     type: ''
     color: 'light'
+    icon: ''
     div: false
 
   render: ->
     classes = {'button': true}
     if @props.type then classes["button-#{@props.type}"] = true
     if @props.color then classes["button-#{@props.color}"] = true
+    if @props.type is 'icon'
+      classes.icon = true
+      classes["ion-#{@props.icon}"] = true
+
     classes = React.addons.classSet(classes)
 
     if @props.div
