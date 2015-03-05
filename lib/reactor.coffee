@@ -14,10 +14,9 @@ Reactor.DOM = do ->
       object[element] = build_tag element
   object
 
-
-# Render to the body
 Reactor.render = (component) -> 
   React.render(component, document.body)
+
 
 # Meteor mixin
 MeteorStateMixin =
@@ -49,62 +48,41 @@ MeteorStateMixin =
       @computations = null
 
 
-MeteorSubscriptionMixin =
+MeteorSubsMixin =
   getInitialState: ->
     loading: do -> if @sub?.ready then not @sub.ready() else false
 
   componentWillMount: ->
-    unless @computations
-      @computations = []
+    unless @subscriptions
+      @subscriptions = []
 
-    @sub = @subscribe()
+    subs = @getMeteorSubs()
+
     c = Tracker.autorun =>
-      @setState {loading: not @sub?.ready?()}
+      loading = false
+      for sub in subs
+        unless sub?.ready?()
+          loading = true
+      @setState {loading}
 
-    @computations.push c 
+    for sub in subs
+      @subscriptions.push(sub)
+
+    @subscriptions.push(c)
 
   componentWillUnmount: ->
-    @sub?.stop?()
-
-Reactor.subs = new SubsManager
-  cacheLimit: 10
-  expireIn: 5
-  
-Reactor.subscribe = Reactor.subs.subscribe.bind(Reactor.subs)
+    if @subscriptions
+      for sub in @subscriptions
+        sub.stop?()
+      @subscriptions = null
 
 Reactor.mixins =
-  PureRender: React.addons.PureRenderMixin
   MeteorStateMixin: MeteorStateMixin
-  MeteorSubscriptionMixin: MeteorSubscriptionMixin
+  MeteorSubsMixin: MeteorSubsMixin
 
-# Create a component
 Reactor.components = {}
 
 Reactor.component = (obj) ->
-
-  if 'displayName' of obj
-    obj.name = obj.displayName
-  if 'name' of obj
-    obj.displayName = obj.name
-
-
-  unless 'mixins' of obj
-      obj.mixins = []
-
-  if 'getMeteorState' of obj
-    unless Reactor.mixins.MeteorStateMixin in obj.mixins
-      obj.mixins.push(Reactor.mixins.MeteorStateMixin)
-
-  if 'subscribe' of obj
-    unless Reactor.mixins.MeteorSubscriptionMixin in obj.mixins
-      obj.mixins.push(Reactor.mixins.MeteorSubscriptionMixin)
-    unless Reactor.mixins.MeteorStateMixin in obj.mixins
-      obj.mixins.push(Reactor.mixins.MeteorStateMixin)
-      
-  # I dont see a case where we wouldnt want this...
-  # I guess all inputs must be controlled...
-  unless Reactor.mixins.PureRender in obj.mixins
-    obj.mixins.push(Reactor.mixins.PureRender)
 
   Element = React.createClass.apply(React, [obj])
 
@@ -112,9 +90,16 @@ Reactor.component = (obj) ->
     options.unshift {} unless typeof options[0] is 'object' and not _.isArray(options[0])
     React.createElement.apply(React, [Element].concat(options))
 
-  if 'name' of obj
-    Reactor.components[obj.name] = func
+  name = obj.name or obj.displayName
+  if name
+    Reactor.components[name] = func
 
   return func
 
 
+Reactor.renderComponent = (componentName) -> 
+  func = Reactor.components[componentName]
+  if func
+    React.render(func(), document.body)
+  else
+    console.log "WARNING: unknown component", componentName
