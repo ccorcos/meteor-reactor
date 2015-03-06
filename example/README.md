@@ -1,10 +1,11 @@
 # To Do
 
-tabbar active set in the component
-remember scroll oddset
+search -- try using a reactive variable and passing that between templates.
 
-new post
-view post page
+remember scroll offet, scroll to top touching the status bar?
+
+stop and restart autoruns for deleting posts.
+
 search users and posts
 
 infinite scrolling with subscriptions

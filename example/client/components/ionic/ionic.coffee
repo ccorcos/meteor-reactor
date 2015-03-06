@@ -1,4 +1,4 @@
-{div, span, button, h1, label, a, i} = Reactor.DOM
+{div, span, input, button, h1, label, a, i} = Reactor.DOM
 
 
 Reactor.component
@@ -33,6 +33,47 @@ Reactor.component
 
     (div {className:classes}, @props.children)
 
+Reactor.component
+  name: 'SearchHeader'
+
+  getDefaultProps: ->
+    color: 'light'  
+    searchLink: null
+    searchChange: null  
+
+  clearSearch: ->
+    @props.searchLink.requestChange('')
+
+  render: ->
+
+    classSet = 
+      'bar': true
+      'bar-header': true
+      'item-input-inset': true
+
+    if @props.color then classSet["bar-#{@props.color}"] = true
+
+    classes = React.addons.classSet(classSet)
+
+    (div {className:classes}, [
+      (label {className:'positive item-input-wrapper'}, [
+        (i {className:'icon ion-ios-search placeholder-icon'})
+        (input {type:"search", placeholder:"Search", value:@props.searchLink.value, onChange:@props.searchChange})
+        do =>
+          if @props.searchLink.value isnt ''
+            (i {className:'icon ion-ios-close placeholder-icon', onClick: @clearSearch})
+      ])
+    ])
+
+# <div class="">
+#   <label class="item-input-wrapper">
+#     <i class="icon ion-ios7-search placeholder-icon"></i>
+#     <input type="search" placeholder="Search">
+#   </label>
+#   <button class="button button-clear">
+#     Cancel
+#   </button>
+# </div>
 
 
 
@@ -196,9 +237,9 @@ Reactor.component
     path = @state.path
 
     (Tabs [
-      (TabItem {icon:'ios-home', active: @props.active is 'home', href: '/'})
-      (TabItem {icon:'ios-search', active: @props.active is 'search', href: '/search'})
-      (TabItem {icon:'ios-plus-empty', active: @props.active is 'plus', href: '/plus'})
-      (TabItem {icon:'ios-list-outline', active: @props.active is 'activity', href: '/activity'})
-      (TabItem {icon:'ios-person', active: @props.active is 'settings', href: '/settings'})
+      (TabItem {icon:'ios-home', active: @props.active is '/', href: '/'})
+      (TabItem {icon:'ios-search', active: @props.active is '/search', href: '/search'})
+      (TabItem {icon:'ios-plus-empty', active: @props.active is '/plus', href: '/plus'})
+      (TabItem {icon:'ios-list-outline', active: @props.active is '/activity', href: '/activity'})
+      (TabItem {icon:'ios-person', active: @props.active is '/settings', href: '/settings'})
     ])

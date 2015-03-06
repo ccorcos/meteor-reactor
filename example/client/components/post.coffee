@@ -7,12 +7,22 @@ Reactor.component
 
   getDefaultProps: ->
     postId: ''
+    back: '/'
 
   getMeteorState:
     post: -> Posts.findOne(@props.postId)
+    userId: -> Meteor.userId()
 
   back: ->
-    FlowRouter.go('/')
+    FlowRouter.go(@props.back)
+
+  deletePost: ->
+    @stopAutoruns()
+    Meteor.call 'deletePost', @state.post._id, (err) =>
+      if err
+        alert(err.reason)
+      @back()
+        
 
   render: ->
     (Ionic {}, [
@@ -24,7 +34,12 @@ Reactor.component
         (h2 @state.post.title)
         (p {}, [
           (Username {userId: @state.post.userId})
-        ]) 
+        ])
+        do =>
+          if @state.userId is @state.post.userId
+            (Padding [
+              (Button {type:'block', color:'assertive', onClick: @deletePost}, 'delete')
+            ])
       ])
-      (Tabbar {active: 'home'})
+      (Tabbar {active: @props.back})
     ])

@@ -24,10 +24,9 @@ Reactor.component
   mixins: [Reactor.mixins.MeteorStateMixin]
 
   getMeteorState:
-    posts: -> Posts.find().fetch({sort:{date:-1}})
+    posts: -> Posts.find({}, {sort:{name: 1, date:-1}}).fetch()
 
   goToPost: (post) ->
-    console.log post._id
     FlowRouter.go('/post/' + post._id)
 
   render: ->
@@ -37,7 +36,7 @@ Reactor.component
       ])
       (Content {header: true}, [
         (List {}, @state.posts.map (post) =>
-          (Item {onClick: (do (post) => => @goToPost(post))}, [
+          (Item {back: '/', onClick: (do (post) => => @goToPost(post))}, [
             (h2 post.title)
             (p {}, [
               (Username {userId: post.userId})
@@ -45,5 +44,5 @@ Reactor.component
           ])
         )  
       ])
-      (Tabbar {active: 'home'})
+      (Tabbar {active: '/'})
     ])

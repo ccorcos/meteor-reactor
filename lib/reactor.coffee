@@ -21,31 +21,35 @@ Reactor.render = (component) ->
 # Meteor mixin
 MeteorStateMixin =
   getInitialState: ->
-    s = {}
-    for name, func of @getMeteorState
-      s[name] = func.bind(this)()
-    return s
+    @startAutoruns()
 
-  componentWillMount: ->
+  startAutoruns: ->
     unless @computations
       @computations = []
 
+    initialState = {}
     computations = @computations
     for name, func of @getMeteorState
       do (name, func) =>
         comp = Tracker.autorun (c)=>
           value = func.bind(this)()
-          unless c.firstRun
+          if c.firstRun
+            initialState[name] = value
+          else
             s = {}
             s[name] = value
             @setState(s)
         computations.push(comp)
+    return initialState
 
-  componentWillUnmount: ->
+  stopAutoruns: ->
     if @computations
       for computation in @computations
         computation.stop?()
       @computations = null
+
+  componentWillUnmount: ->
+    @stopAutoruns()
 
 
 MeteorSubsMixin =
@@ -70,11 +74,14 @@ MeteorSubsMixin =
 
     @subscriptions.push(c)
 
-  componentWillUnmount: ->
+  stopSubs: ->
     if @subscriptions
       for sub in @subscriptions
         sub.stop?()
       @subscriptions = null
+      
+  componentWillUnmount: ->
+    @stopSubs()
 
 Reactor.mixins =
   MeteorStateMixin: MeteorStateMixin

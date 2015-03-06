@@ -16,6 +16,6 @@ Reactor.component
         "nothing here yet",
         (a {href:"/login"}, "login")
       ])
-      (Tabbar {active: 'settings'})
+      (Tabbar {active: '/settings'})
     ])
 
