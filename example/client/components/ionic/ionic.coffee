@@ -34,6 +34,8 @@ Reactor.component
     (div {className:classes}, @props.children)
 
 
+
+
 Reactor.component
   name: 'Footer'
 
@@ -58,12 +60,14 @@ Reactor.component
   getDefaultProps: ->
     header: false
     footer: false
+    padding: false
 
   render: ->
 
     classes = React.addons.classSet
       'content': true
       'overflow-scroll': true
+      'padding': @props.padding
       'has-header': @props.header
       'has-footer': @props.header
 
@@ -170,7 +174,7 @@ TabItem = Reactor.component
   render: ->
 
     classSeti = {'icon': true}
-    classSeti[@props.icon] = true
+    classSeti["ion-#{@props.icon}"] = true
     classesi = React.addons.classSet(classSeti)
 
     classSeta = {'tab-item': true}
@@ -185,16 +189,16 @@ Reactor.component
   name: 'Tabbar'
   mixins: [Reactor.mixins.MeteorStateMixin]
 
-  getMeteorState:
-    path: -> FlowRouter.reactiveCurrent().path
+  getDefaultProps: ->
+    active: 'home'
 
   render: ->
     path = @state.path
 
     (Tabs [
-      (TabItem {icon:'ion-ios-home', active: path is '/', href: '/'})
-      (TabItem {icon:'ion-ios-search', active: path is '/search', href: '/search'})
-      (TabItem {icon:'ion-ios-plus-empty', active: path is '/plus', href: '/plus'})
-      (TabItem {icon:'ion-ios-list-outline', active: path is '/activity', href: '/activity'})
-      (TabItem {icon:'ion-ios-person', active: path is '/settings', href: '/settings'})
+      (TabItem {icon:'ios-home', active: @props.active is 'home', href: '/'})
+      (TabItem {icon:'ios-search', active: @props.active is 'search', href: '/search'})
+      (TabItem {icon:'ios-plus-empty', active: @props.active is 'plus', href: '/plus'})
+      (TabItem {icon:'ios-list-outline', active: @props.active is 'activity', href: '/activity'})
+      (TabItem {icon:'ios-person', active: @props.active is 'settings', href: '/settings'})
     ])

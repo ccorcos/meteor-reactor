@@ -50,3 +50,8 @@ FlowRouter.route '/settings',
   middlewares: [requiredLogin]
   action: (params) ->
     Reactor.renderComponent "Settings"
+
+FlowRouter.route '/post/:postId',
+  middlewares: [requiredLogin]
+  action: (params) ->
+    Reactor.renderComponent "Post", {postId: params.postId}

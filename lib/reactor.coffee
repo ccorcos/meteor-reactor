@@ -23,7 +23,7 @@ MeteorStateMixin =
   getInitialState: ->
     s = {}
     for name, func of @getMeteorState
-      s[name] = func()
+      s[name] = func.bind(this)()
     return s
 
   componentWillMount: ->
@@ -34,7 +34,7 @@ MeteorStateMixin =
     for name, func of @getMeteorState
       do (name, func) =>
         comp = Tracker.autorun (c)=>
-          value = func()
+          value = func.bind(this)()
           unless c.firstRun
             s = {}
             s[name] = value
@@ -97,9 +97,11 @@ Reactor.component = (obj) ->
   return func
 
 
-Reactor.renderComponent = (componentName) -> 
+Reactor.renderComponent = (args...) -> 
+  componentName = args[0]
+  rest = args[1..]
   func = Reactor.components[componentName]
   if func
-    React.render(func(), document.body)
+    React.render(func.apply({}, rest), document.body)
   else
     console.log "WARNING: unknown component", componentName

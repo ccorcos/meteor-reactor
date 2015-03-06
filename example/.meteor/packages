@@ -13,3 +13,5 @@ accounts-password
 meteorhacks:flow-router
 meteorhacks:fast-render
 pagebakers:ionicons
+anti:fake
+erasaur:meteor-lodash

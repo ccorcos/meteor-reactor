@@ -6,7 +6,6 @@ Reactor.component
   name: 'Activity'
   mixins: [React.addons.LinkedStateMixin]
 
-
   render: ->
     (Ionic {}, [
       (Header  [
@@ -16,6 +15,6 @@ Reactor.component
         "nothing here yet",
         (a {href:"/login"}, "login")
       ])
-      (Tabbar())
+      (Tabbar {active: 'activity'})
     ])
 
