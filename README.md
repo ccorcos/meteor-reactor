@@ -2,6 +2,14 @@
 
 An opinionated package for integrating React with Meteor.
 
+## WARNING
+
+I created this package to experiment with React. 
+
+I've sense created an [unopinionated React package](https://github.com/ccorcos/meteor-react) that simply adds React, JSX, and CJSX transcompilers. 
+
+All the mixin stuff, I've since moved to the [`ccorcos:react-utils`](https://github.com/ccorcos/meteor-react-utils) pacakge which is much further along than this package.
+
 ## Getting Started
 
     meteor add ccorcos:reactor
