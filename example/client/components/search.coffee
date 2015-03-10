@@ -7,47 +7,36 @@ Reactor.component
   mixins: [React.addons.LinkedStateMixin]
 
   getInitialState: ->
-    search: ''
+    search: new ReactiveVar('')
 
   render: ->
-    searchLink = this.linkState('search')
-    searchChange = (e) ->
-      searchLink.requestChange(e.target.value)
-
     (Ionic {}, [
-      (SearchHeader {searchChange:searchChange, searchLink:searchLink})
+      (SearchHeader {search:@state.search})
       (Content {header: true}, [
         (PostResults {search: @state.search})
       ])
       (Tabbar {active: '/search'})
     ])
 
+
 PostResults = Reactor.component
   name: 'PostResults'
   mixins: [Reactor.mixins.MeteorStateMixin]
-
-  getDefaultProps: ->
-    search: ''
 
   goToPost: (post) ->
     FlowRouter.go('/post/' + post._id)
 
   getMeteorState:
     posts: ->
-      console.log "autorun", @props.search
-      filter = new RegExp(@props.search, 'ig')
-      posts = Posts.find({title: filter}, {sort: {name:1, date:-1}})?.fetch()
-      console.log "posts", posts?.length
-      return posts
+      filter = new RegExp(@props.search.get(), 'ig')
+      Posts.find({title: filter}, {sort: {name:1, date:-1}})?.fetch()
 
   render: ->
-
-    console.log @state.posts?.length
-    (List {}, @state.posts?.map (post) ->
-      (Item {back: '/search', onClick: (do (post) => => @goToPost(post))}, [
+    (List {}, @state.posts?.map (post) =>
+      (Item {key:post._id, back: '/search', onClick: (do (post) => => @goToPost(post))}, [
         (h2 post.title)
         (p {}, [
-          (Username {userId: post.userId})
+          (Username {userId: post.userId, key: post.userId})
         ])
       ])
     )

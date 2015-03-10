@@ -5,7 +5,10 @@ Reactor = @Reactor
 # Coffee Syntax Jazz
 build_tag = (tag) ->
   (options...) ->
+    # first argument is empty props
     options.unshift {} unless typeof options[0] is 'object' and not _.isArray(options[0])
+    opts = options
+
     React.DOM[tag].apply @, options
 
 Reactor.DOM = do ->
@@ -20,8 +23,6 @@ Reactor.render = (component) ->
 
 # Meteor mixin
 MeteorStateMixin =
-  getInitialState: ->
-    @startAutoruns()
 
   startAutoruns: ->
     unless @computations
@@ -47,6 +48,9 @@ MeteorStateMixin =
       for computation in @computations
         computation.stop?()
       @computations = null
+
+  getInitialState: ->
+    @startAutoruns()
 
   componentWillUnmount: ->
     @stopAutoruns()

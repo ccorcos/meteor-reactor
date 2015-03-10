@@ -8,9 +8,9 @@ Reactor.component
 
   render: ->
     (Ionic {}, [
-      (Header  [
-        (Title 'Activity')
-      ])
+      (Header  {}, 
+        (Title {}, 'Activity')
+      )
       (Content {header: true}, [
         "nothing here yet",
         (a {href:"/login"}, "login")

@@ -36,10 +36,10 @@ Reactor.component
       ])
       (Content {header: true}, [
         (List {}, @state.posts.map (post) =>
-          (Item {back: '/', onClick: (do (post) => => @goToPost(post))}, [
+          (Item {key: post._id, back: '/', onClick: (do (post) => => @goToPost(post))}, [
             (h2 post.title)
             (p {}, [
-              (Username {userId: post.userId})
+              (Username {userId: post.userId, key:post.userId})
             ])
           ])
         )  

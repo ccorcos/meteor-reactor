@@ -35,14 +35,19 @@ Reactor.component
 
 Reactor.component
   name: 'SearchHeader'
+  mixins: [Reactor.mixins.MeteorStateMixin]
 
   getDefaultProps: ->
     color: 'light'  
-    searchLink: null
-    searchChange: null  
 
   clearSearch: ->
-    @props.searchLink.requestChange('')
+    @props.search.set('')
+
+  searchChange: (e) ->
+    @props.search.set(e.target.value)
+
+  getMeteorState:
+    text: -> @props.search.get()
 
   render: ->
 
@@ -58,9 +63,9 @@ Reactor.component
     (div {className:classes}, [
       (label {className:'positive item-input-wrapper'}, [
         (i {className:'icon ion-ios-search placeholder-icon'})
-        (input {type:"search", placeholder:"Search", value:@props.searchLink.value, onChange:@props.searchChange})
+        (input {type:"search", placeholder:"Search", value:@state.text, onChange:@searchChange})
         do =>
-          if @props.searchLink.value isnt ''
+          if @state.text isnt ''
             (i {className:'icon ion-ios-close placeholder-icon', onClick: @clearSearch})
       ])
     ])
